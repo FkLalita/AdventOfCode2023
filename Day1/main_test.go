@@ -1,80 +1,79 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"strconv"
 	"strings"
+	"testing"
 )
 
-// ExtractDigitsAndSpelledStrings extracts digits from a string and converts spelled-out numbers to digits.
-func ExtractDigitsAndSpelledStrings(str string) []int {
-	spellingMap := map[string]int{
-		"one":   1,
-		"two":   2,
-		"three": 3,
-		"four":  4,
-		"five":  5,
-		"six":   6,
-		"seven": 7,
-		"eight": 8,
-		"nine":  9,
+// TestExtractDigitsAndSpelledStrings tests the ExtractDigitsAndSpelledStrings function.
+func TestExtractDigitsAndSpelledStrings(t *testing.T) {
+	// Test case where the input contains both digits and spelled-out numbers
+	input := "abc123def four ghi56seven"
+	expected := []int{1, 2, 3, 4, 5, 6, 7}
+	result := ExtractDigitsAndSpelledStrings(input)
+
+	if len(result) != len(expected) {
+		t.Errorf("Length of result and expected do not match.")
 	}
 
-	digits := []int{}
-	for i, char := range str {
-		if digit, err := strconv.Atoi(string(char)); err == nil {
-			digits = append(digits, digit)
-		} else {
-			for spelling, number := range spellingMap {
-				if strings.HasPrefix(str[i:], spelling) {
-					digits = append(digits, number)
-					break
-				}
-			}
+	for i := range result {
+		if result[i] != expected[i] {
+			t.Errorf("Mismatch at index %d. Expected: %d, Got: %d", i, expected[i], result[i])
 		}
 	}
-
-	return digits
 }
 
-// GetSum calculates the sum of all the results once the digits are extracted.
-func GetSum(lines []string, extractFunc func(string) []int) int {
-	answer := 0
-	for _, line := range lines {
-		digits := extractFunc(line)
-		if len(digits) > 0 {
-			first, last := digits[0], digits[len(digits)-1]
-			answer += first*10 + last
-		} else {
-			fmt.Println("No digits found in the string")
+// TestExtractDigits tests the ExtractDigits function.
+func TestExtractDigits(t *testing.T) {
+	// Test case where the input contains only digits
+	input := "abc123def456ghi789"
+	expected := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	result := ExtractDigits(input)
+
+	if len(result) != len(expected) {
+		t.Errorf("Length of result and expected do not match.")
+	}
+
+	for i := range result {
+		if result[i] != expected[i] {
+			t.Errorf("Mismatch at index %d. Expected: %d, Got: %d", i, expected[i], result[i])
 		}
 	}
-	return answer
 }
 
-// ExtractDigits extracts only digits from a string.
-func ExtractDigits(str string) []int {
-	digits := []int{}
-	for _, char := range str {
-		if digit, err := strconv.Atoi(string(char)); err == nil {
-			digits = append(digits, digit)
-		}
-	}
-	return digits
-}
+// TestGetSum tests the GetSum function.
+func TestGetSum(t *testing.T) {
+	lines := []string{"abc123def", "fourghi56seven", "xyz789uvw"}
+	expected := 123 + 7 + 9 // Sum of the first digits and last digits in each line
 
-func main() {
-	filename := "input.txt"
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return
+	// Test with ExtractDigitsAndSpelledStrings
+	result := GetSum(lines, ExtractDigitsAndSpelledStrings)
+	if result != expected {
+		t.Errorf("Expected: %d, Got: %d", expected, result)
 	}
 
-	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-	// First Challenge
-	fmt.Println("First Challenge Answer:", GetSum(lines, ExtractDigits))
-	// Second Challenge
-	fmt.Println("Second Challenge Answer:", GetSum(lines, ExtractDigitsAndSpelledStrings))
+	// Test with ExtractDigits
+	result = GetSum(lines, ExtractDigits)
+	if result != expected {
+		t.Errorf("Expected: %d, Got: %d", expected, result)
+	}
 }
+
+func TestMain(t *testing.T) {
+	// Set up test input data
+	input := "abc123def four ghi56seven\nfourghi56sevenxyz789uvw"
+	lines := strings.Split(input, "\n")
+
+	// Redirect stdout for testing output
+	output := captureOutput(func() {
+		// Test main function
+		main()
+	})
+
+	// Test expected output
+	expectedOutput := "First Challenge Answer: 27\nSecond Challenge Answer: 27\n"
+	if output != expectedOutput {
+		t.Errorf("Expected Output:\n%s\nGot Output:\n%s", expectedOutput, output)
+	}
+}
+
