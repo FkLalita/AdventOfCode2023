@@ -1,6 +1,4 @@
-use std::io::Read;
-
-fn extract_concatenated_strings(str: &str) -> Vec<i32> {
+pub fn extract_concatenated_digits(str: &str) -> Vec<i32> {
     let mut digits = Vec::new();
     for line in str.lines() {
         let line_digits: Vec<i32> = line
@@ -15,19 +13,4 @@ fn extract_concatenated_strings(str: &str) -> Vec<i32> {
         }
     }
     digits
-}
-
-fn main() {
-    let mut file = std::fs::File::open("input.txt").unwrap();
-    let mut content = String::new();
-    file.read_to_string(&mut content).unwrap();
-
-    let results = extract_concatenated_strings(&content);
-
-    let mut res = 0;
-    for result in results {
-        res += result
-    }
-
-    println!("{}", res)
 }
