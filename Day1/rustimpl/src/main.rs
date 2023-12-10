@@ -17,8 +17,8 @@ fn main() {
         dfd_f
     );
 
-    //    let mut contents = String::new();
-    //    file.read_to_string(&mut contents).unwrap();
+    //   let mut contents = String::new();
+    // file.read_to_string(&mut contents).unwrap();
 
     let results = part1::extract_concatenated_digits(&content);
 

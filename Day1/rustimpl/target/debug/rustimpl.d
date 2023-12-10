@@ -1,1 +1,1 @@
-C:\Users\DSRC\Desktop\Go\advent-of-code\Day1\rustimpl\target\debug\rustimpl.exe: C:\Users\DSRC\Desktop\Go\advent-of-code\Day1\rustimpl\src\main.rs
+C:\Users\DSRC\Desktop\Go\advent-of-code\Day1\rustimpl\target\debug\rustimpl.exe: C:\Users\DSRC\Desktop\Go\advent-of-code\Day1\rustimpl\src\main.rs C:\Users\DSRC\Desktop\Go\advent-of-code\Day1\rustimpl\src\part1.rs C:\Users\DSRC\Desktop\Go\advent-of-code\Day1\rustimpl\src\part2.rs
