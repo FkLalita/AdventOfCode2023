@@ -32,7 +32,7 @@ func CubeCount() {
 	// loop through each game
 	for _, gameInfo := range games[1:] {
 		// Split game information into subsets
-		subsets := strings.Split(gameInfo, ";")
+		subsets := strings.Split(gameInfo, ":")
 
 		// Loop through each subset
 		for _, subset := range subsets {
@@ -60,7 +60,9 @@ func CubeCount() {
 					fmt.Println("Unknown color:", color)
 				}
 			}
+
 		}
+		fmt.Println("red", redCount, blueCount, greenCount)
 
 		// check if the remaining counts are non-negative/positive
 		if redCount >= 0 && greenCount >= 0 && blueCount >= 0 {
@@ -74,7 +76,7 @@ func CubeCount() {
 				return
 			}
 			sumOfPossibleIDs += id
-			fmt.Println("possible game id:", gameID)
+			//fmt.Println("possible game id:", gameID)
 		}
 
 		// reset cube counts for the next game
