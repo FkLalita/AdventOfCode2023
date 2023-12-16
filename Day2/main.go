@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strconv"
@@ -13,78 +14,65 @@ func main() {
 }
 
 func CubeCount() {
-	redCount := 12
-	greenCount := 13
-	blueCount := 14
-
-	inputs, err := os.ReadFile("input.txt")
+	inputs, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println("Error Reading file:", err)
 		return
 	}
-	input := string(inputs)
+	defer inputs.Close()
 
-	games := strings.Split(input, "Game ")
-
-	// Variable to store the sum of possible game IDs
+	scanner := bufio.NewScanner(inputs)
 	sumOfPossibleIDs := 0
 
-	// loop through each game
-	for _, gameInfo := range games[1:] {
-		// Split game information into subsets
-		subsets := strings.Split(gameInfo, ":")
+	for scanner.Scan() {
+		line := scanner.Text()
+		gameID := strings.Split(line, ":")
+		game_ids := gameID[0]
+		game_id, err := strconv.Atoi(game_ids[5:])
+		if err != nil {
+			fmt.Println(err)
+		}
 
-		// Loop through each subset
-		for _, subset := range subsets {
-			// Extract color and count from the subset
-			parts := strings.Fields(subset)
-			if len(parts) == 2 {
-				color := parts[1]
-				countStr := parts[0]
+		var gameSatisfiesConditions bool
 
-				// Convert count string to integer
-				count, err := strconv.Atoi(countStr)
-				if err != nil {
-					fmt.Println("Error converting string:", err)
-					return
+		for _, gameIDs := range gameID[1:] {
+			subset := strings.Split(gameIDs, ";")
+			for _, subsets := range subset {
+				games := strings.Split(subsets, ",")
+
+				for _, colorz := range games {
+					colors := strings.Fields(colorz)
+					color := colors[1]
+					count, _ := strconv.Atoi(colors[0])
+					switch {
+					case color == "blue" && count > 14:
+						gameSatisfiesConditions = false
+					case color == "red" && count > 12:
+						gameSatisfiesConditions = false
+					case color == "green" && count > 13:
+						gameSatisfiesConditions = false
+					default:
+						gameSatisfiesConditions = true
+					}
+
+					if !gameSatisfiesConditions {
+						break
+					}
 				}
-				// deduct the count from the corresponding cube count
-				switch color {
-				case "red":
-					redCount -= count
-				case "green":
-					greenCount -= count
-				case "blue":
-					blueCount -= count
-				default:
-					fmt.Println("Unknown color:", color)
+
+				if !gameSatisfiesConditions {
+					break
 				}
 			}
 
-		}
-		fmt.Println("red", redCount, blueCount, greenCount)
-
-		// check if the remaining counts are non-negative/positive
-		if redCount >= 0 && greenCount >= 0 && blueCount >= 0 {
-			// if yes, the game is possible with the given cube counts
-			// add the game's id to the sum
-			gameID := strings.Split(gameInfo, ":")[0]
-			// Convert the game ID to an integer
-			id, err := strconv.Atoi(gameID)
-			if err != nil {
-				fmt.Println("Error converting game ID to integer:", err)
-				return
+			if !gameSatisfiesConditions {
+				break
 			}
-			sumOfPossibleIDs += id
-			//fmt.Println("possible game id:", gameID)
 		}
 
-		// reset cube counts for the next game
-		redCount = 12
-		greenCount = 13
-		blueCount = 14
+		if gameSatisfiesConditions {
+			sumOfPossibleIDs += game_id
+		}
 	}
-
-	// Print the sum of all possible game IDs
-	fmt.Println("Sum of Possible Game IDs:", sumOfPossibleIDs)
+	fmt.Println(sumOfPossibleIDs)
 }
