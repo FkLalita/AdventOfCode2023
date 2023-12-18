@@ -5,7 +5,7 @@ fn main() {
     cube_count();
 }
 
-fn cube_count() {
+fn cube_count() -> (i32, i32) {
     let inputs = read_to_string("input.txt").expect("error reading files");
     let mut sum_id = 0;
     let mut totalsum = 0;
@@ -58,6 +58,8 @@ fn cube_count() {
         "The sum of the possible game IDs is {}.\nThe sum of the powers of the minimum sets is {}.",
         sum_id, totalsum
     );
+
+    (sum_id, totalsum)
 }
 
 #[cfg(test)]
@@ -69,6 +71,6 @@ mod tests {
         let input = "1: 5 red, 8 blue, 7 green; 2: 10 red, 12 blue, 11 green";
         // Add more test cases as needed
 
-        assert_eq!(cube_count(input), (3, 336)); // Update the expected values based on your test case
+        assert_eq!(cube_count(), (3, 336)); // Update the expected values based on your test case
     }
 }

@@ -23,6 +23,7 @@ func CubeCount() {
 
 	scanner := bufio.NewScanner(inputs)
 	sumOfPossibleIDs := 0
+	sumOfPowers := 0
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -44,6 +45,7 @@ func CubeCount() {
 					colors := strings.Fields(colorz)
 					color := colors[1]
 					count, _ := strconv.Atoi(colors[0])
+
 					switch {
 					case color == "blue" && count > 14:
 						gameSatisfiesConditions = false
@@ -73,6 +75,42 @@ func CubeCount() {
 		if gameSatisfiesConditions {
 			sumOfPossibleIDs += game_id
 		}
+
+		// Part 2 Logic
+		var minRed, minGreen, minBlue int
+
+		for _, gameIDs := range gameID[1:] {
+			subset := strings.Split(gameIDs, ";")
+			for _, subsets := range subset {
+				games := strings.Split(subsets, ",")
+
+				for _, colorz := range games {
+					colors := strings.Fields(colorz)
+					color := colors[1]
+					count, _ := strconv.Atoi(colors[0])
+
+					switch {
+					case color == "red":
+						minRed = max(minRed, count)
+					case color == "green":
+						minGreen = max(minGreen, count)
+					case color == "blue":
+						minBlue = max(minBlue, count)
+					}
+				}
+			}
+		}
+
+		sumOfPowers += minRed * minGreen * minBlue
 	}
-	fmt.Println(sumOfPossibleIDs)
+
+	fmt.Println("Sum of Possible IDs:", sumOfPossibleIDs)
+	fmt.Println("Sum of Powers:", sumOfPowers)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
