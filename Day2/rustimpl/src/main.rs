@@ -59,3 +59,16 @@ fn cube_count() {
         sum_id, totalsum
     );
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cube_count() {
+        let input = "1: 5 red, 8 blue, 7 green; 2: 10 red, 12 blue, 11 green";
+        // Add more test cases as needed
+
+        assert_eq!(cube_count(input), (3, 336)); // Update the expected values based on your test case
+    }
+}
